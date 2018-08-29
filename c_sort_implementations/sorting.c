@@ -70,7 +70,7 @@ int main()
 
         startTimer(&t);
         changes = bubbleSort(array,s);
-        /* changes = insertionSort(array,s);*/
+        changes = insertionSort(array,s);
         /* changes = binaryInsertionSort(array,s);*/
         /* changes = shellSort(array,s,0); // usando sequencia de Shell,1959 */
         /* changes = shellSort(array,s,1); // usando sequencia de Knuth,1971 */
@@ -125,7 +125,15 @@ long long int insertionSort(int* C, int n)
 
     /* TODO: implementar codigo do insertionSort */
 
-
+    for(size_t i = 1; i < n; ++i) {
+		int tmp = C[i];
+		size_t j = i;
+		while(j > 0 && tmp < C[j - 1]) {
+			C[j] = C[j - 1];
+			--j;
+		}
+		C[j] = tmp;
+	}
 
     return changes;
 }
