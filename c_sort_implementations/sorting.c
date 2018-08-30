@@ -29,8 +29,6 @@ void createRandomArray(int* C, int size);
 int isArraySorted(int* C, int size);
 void printArray(int* C, int size);
 
-int verbose = 1;
-
 /* MAIN */
 int main()
 {
@@ -41,56 +39,54 @@ int main()
     long long int changes;
 
     int* array;
+    int s = 10000;
+    int i;
 
-    if(verbose)
-        printf("Tamanho Metodo\n");
+    array = (int*) malloc(s*sizeof(int));
 
-    int s = 100;
-    /*for(s = 1000; s <= 128000; s = s*2){*/
-        /* Aloca array de tamanho s */
-        array = (int*) malloc(s*sizeof(int));
+    /* Gera configuracao do array */
+    // createSortedArray(array,s);
+    // createReversedArray(array,s);
 
-        /* Gera configuracao do array */
-        /* createSortedArray(array,s);*/
-        /* createReversedArray(array,s);*/
-        createRandomArray(array,s);
+    printf("Bubble\n");
+    createRandomArray(array,s);
+
+    //printArray(array,s);
+
+    printf("Tamanho %d\n",s);
+
+    startTimer(&t);
+    changes = bubbleSort(array,s);
+    time = stopTimer(&t);
+
+    printf("trocas %lld, tempo %f\n",changes,time);
+    printf("ordenado? %s\n",(isArraySorted(array,s)?"sim":"nao"));
+    //printArray(array,s);
+
+    printf("\n\n");
+
+    printf("Insertion\n");
+    createRandomArray(array,s);
+
+    //printArray(array,s);
+
+    printf("Tamanho %d\n",s);
+
+    startTimer(&t);
+    changes = insertionSort(array,s);
+    time = stopTimer(&t);
+
+    printf("trocas %lld, tempo %f\n",changes,time);
+    printf("ordenado? %s\n",(isArraySorted(array,s)?"sim":"nao"));
+    //printArray(array,s);
+
+    // changes = binaryInsertionSort(array,s);
+    // changes = shellSort(array,s,0); // usando sequencia de Shell,1959
+    // changes = shellSort(array,s,1); // usando sequencia de Knuth,1971
+    // changes = shellSort(array,s,2); // usando sequencia de Tokuda,1992
 
 
-        /* Imprime array */
-        printArray(array,s);
-
-        /* Imprime tamanho do array */
-
-        if(verbose)
-            printf("Tamanho %d\n",s);
-        else
-            printf("%d ",s);
-
-        /* Executa metodo */
-
-        startTimer(&t);
-        changes = bubbleSort(array,s);
-        changes = insertionSort(array,s);
-        /* changes = binaryInsertionSort(array,s);*/
-        /* changes = shellSort(array,s,0); // usando sequencia de Shell,1959 */
-        /* changes = shellSort(array,s,1); // usando sequencia de Knuth,1971 */
-        /* changes = shellSort(array,s,2); // usando sequencia de Tokuda,1992 */
-        time = stopTimer(&t);
-
-        /* if(verbose){ */
-            printf("trocas %lld, tempo %f\n",changes,time);
-            printf("ordenado? %s\n",(isArraySorted(array,s)?"sim":"nao"));
-            printArray(array,s);
-
-        /*}else{*/
-            /* printf("ll%d ",changes);*/
-            /* printf("%f ",time); */
-        /*}*/
-
-        free(array);
-
-        printf("\n");
-    /*}*/
+    free(array);
 
     return 0;
 }
@@ -123,13 +119,12 @@ long long int insertionSort(int* C, int n)
 {
     long long int changes = 0;
 
-    /* TODO: implementar codigo do insertionSort */
-
     for(size_t i = 1; i < n; ++i) {
 		int tmp = C[i];
 		size_t j = i;
 		while(j > 0 && tmp < C[j - 1]) {
 			C[j] = C[j - 1];
+			changes++;
 			--j;
 		}
 		C[j] = tmp;
@@ -229,10 +224,9 @@ long long int shellSort(int *C, int n, int typeSequence)
 {
     int numElems;
     int* sequence = generateGapSequence(n,typeSequence,&numElems);
-    if(verbose){
-        printf("Sequencia ");
-        printArray(sequence,numElems);
-    }
+
+    printf("Sequencia ");
+    printArray(sequence,numElems);
 
     long long int changes = 0;
     int i, h, f;
