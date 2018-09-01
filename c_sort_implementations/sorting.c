@@ -39,7 +39,7 @@ int main()
     long long int changes;
 
     int* array;
-    int s = 10000;
+    int s = 100;
     int i;
 
     array = (int*) malloc(s*sizeof(int));
@@ -48,11 +48,10 @@ int main()
     // createSortedArray(array,s);
     // createReversedArray(array,s);
 
+    /* Bubble */
     printf("Bubble\n");
     createRandomArray(array,s);
-
     //printArray(array,s);
-
     printf("Tamanho %d\n",s);
 
     startTimer(&t);
@@ -62,14 +61,13 @@ int main()
     printf("trocas %lld, tempo %f\n",changes,time);
     printf("ordenado? %s\n",(isArraySorted(array,s)?"sim":"nao"));
     //printArray(array,s);
-
     printf("\n\n");
+
+    /* Insertion */
 
     printf("Insertion\n");
     createRandomArray(array,s);
-
     //printArray(array,s);
-
     printf("Tamanho %d\n",s);
 
     startTimer(&t);
@@ -79,8 +77,24 @@ int main()
     printf("trocas %lld, tempo %f\n",changes,time);
     printf("ordenado? %s\n",(isArraySorted(array,s)?"sim":"nao"));
     //printArray(array,s);
+    printf("\n\n");
 
-    // changes = binaryInsertionSort(array,s);
+    /* Binary Insertion */
+
+    printf("Binary Insertion\n");
+    createRandomArray(array,s);
+    //printArray(array,s);
+    printf("Tamanho %d\n",s);
+
+    startTimer(&t);
+    changes = binaryInsertionSort(array,s);
+    time = stopTimer(&t);
+
+    printf("trocas %lld, tempo %f\n",changes,time);
+    printf("ordenado? %s\n",(isArraySorted(array,s)?"sim":"nao"));
+    //printArray(array,s);
+    printf("\n\n");
+
     // changes = shellSort(array,s,0); // usando sequencia de Shell,1959
     // changes = shellSort(array,s,1); // usando sequencia de Knuth,1971
     // changes = shellSort(array,s,2); // usando sequencia de Tokuda,1992
@@ -96,9 +110,7 @@ long long int bubbleSort(int *C, int n)
 {
     long long int changes = 0;
 
-    /* TODO: implementar codigo do bubbleSort */
-
-    int i, t, j = n, s = 1;
+    int i, t, j = n, s = 1, changed;
     while(s) {
         s = 0;
         for (i = 1; i < j; i++) {
@@ -107,10 +119,11 @@ long long int bubbleSort(int *C, int n)
                 C[i] = C[i - 1];
                 C[i - 1] = t;
                 s = 1;
+                changed = i;
                 changes++;
             }
         }
-        j--;
+        j = changed;
     }
     return changes;
 }
@@ -124,8 +137,8 @@ long long int insertionSort(int* C, int n)
 		size_t j = i;
 		while(j > 0 && tmp < C[j - 1]) {
 			C[j] = C[j - 1];
-			changes++;
 			--j;
+			changes++;
 		}
 		C[j] = tmp;
 	}
@@ -154,8 +167,24 @@ long long int binaryInsertionSort(int *C, int n)
        Usar funcao binarySearch para achar posicao onde inserir cada chave
        ex: posicao = binarySearch(C, 0, ultimoElementoOrdenado, chave)
     */
+    int i, loc, j, k, selected;
 
+    for (i = 1; i < n; ++i)
+    {
+        j = i - 1;
+        selected = C[i];
 
+        loc = binarySearch(C, 0, i, selected);
+
+        // Move all elements after location to create space
+        while (j >= loc)
+        {
+            C[j+1] = C[j];
+            j--;
+            changes++;
+        }
+        C[j+1] = selected;
+    }
 
     return changes;
 }
